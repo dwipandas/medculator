@@ -126,8 +126,8 @@ def secondarydisorder(na, cl, ph, pco2, hco3, albumin, primarydisorder=0):
         return None
 
 
-def tertiarydisorder(hco3, primarydisorder, ag):
-    if primarydisorder in [0, 1, 2]:
+def tertiarydisorder(hco3, primarydisorder, secondarydisorder, ag):
+    if primarydisorder in [0, 1, 2] or secondarydisorder in [0, 1, 2]:
         deltaratio = (ag - 12) / (24 - hco3)
         if 0.4 <= deltaratio < 1:
             if ag > 10:
@@ -176,7 +176,7 @@ def analyseabg(ph, po2, pco2, hco3, na, cl, age, fio2=0.21, patm=760, vp=47, alb
     if s is not None:
         disorder.append(abnormalities[s])
     ag = anion_gap(na, cl, hco3, albumin)
-    t = tertiarydisorder(hco3, p, ag)
+    t = tertiarydisorder(hco3, p, s, ag)
     if t is not None:
         disorder.append(abnormalities[t])
     ox = oxygenation(fio2, po2, pco2, age, patm, vp)
