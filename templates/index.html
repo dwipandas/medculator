@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8">
+        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+        <script type="text/javascript">
+
+
+            $("document").ready(function(){
+            $("#input_form").submit(function (event){
+                event.preventDefault();
+                    $.ajax({
+                        url: "/result",
+                        type : "POST",
+                        //contentType : "application/JSON",
+                        data : $("#input_form").serialize(),
+                        success : function (data){
+                            console.log("success");
+                            $("#output_list").empty();
+                            $.each(data, function (index, value){
+                                $("#output_list").append("<li>" + value + "</li>");
+                            })
+                            //$("#output_div").text("Result:");
+                        }
+                    });
+                });
+            });
+
+
+
+        </script>
+    <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Quicksand', sans-serif;
+            text-align: center;
+        }
+        div {
+            justify-content: center;
+            text-align: center;
+        }
+        table  {
+            align-self: center;
+            margin: 0 auto;
+        }
+        tr:nth-child(even) {
+            background-color: #e0fcfc;
+        }
+        ul {
+            list-style-type: none;
+            background-color: linen;
+            white-space: nowrap;
+        }
+    </style>
+    </head>
+<body>
+<div class="container">
+    <form id="input_form"  method="POST" action="/result">
+        <div class="input">
+            <table>
+                <tr>
+                    <th></th>
+                    <th>Analyse ABG</th>
+                    <th></th>
+                </tr>
+                <tr>
+                    <td><label>Age </label></td>
+                    <td><input type="text" class="container" id="age" name="age" placeholder="Enter Age of the Patient"></td>
+                    <td><label>Years</label></td>
+                </tr>
+                <tr>
+                    <td><label>pH </label></td>
+                    <td><input type="text" class="container" id="ph" name="ph" placeholder="Enter pH value"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><label>PO<sub>2</sub> </label></td>
+                    <td><input type="text" class="container" id="po2" name="po2" placeholder="Enter PO2 value"></td>
+                    <td><label>mmHg</label></td>
+                </tr>
+                <tr>
+                    <td><label>PCO<sub>2</sub></label></td>
+                    <td><input type="text" class="container" id="pco2" name="pco2" placeholder="Enter PCO2 value"></td>
+                    <td><label>mmHg</label></td>
+                </tr>
+                <tr>
+                    <td><label>HCO<sub>3</sub></label></td>
+                    <td><input type="text" class="container" id="hco3" name="hco3" placeholder="Enter HCO3 value"></td>
+                    <td><label>mEq/L</label></td>
+                </tr>
+                <tr>
+                    <td><label>Na<sup>+</sup></label></td>
+                    <td><input type="text" class="container" id="na" name="na"  placeholder="Enter Na value"></td>
+                    <td><label>mEq/L</label></td>
+                </tr>
+                <tr>
+                    <td><label>Cl<sup>-</sup></label></td>
+                    <td><input type="text" class="container" id="cl" name="cl" placeholder="Enter Cl value"></td>
+                    <td><label>mEq/L</label></td>
+                </tr>
+                <tr>
+                    <td><label>Albumin</label></td>
+                    <td><input type="text" class="container" id="alb" name="alb" placeholder="Enter Albumin value"></td>
+                    <td><label>mg/dl</label></td>
+                </tr>
+                <tr>
+                    <td><label>FIO<sub>2</sub></label></td>
+                    <td><input type="text" class="container" id="fio2" name="fio2" placeholder="Enter FIO2 value" value="0.21"></td>
+                    <td></td>
+                </tr>
+                <tr>
+                    <td><label>P<sub>atm</sub></label></td>
+                    <td><input type="text" class="container" id="patm" name="patm" placeholder="Enter Atmospheric Pressure" value="760" ></td>
+                    <td><label>mmHg</label></td>
+                </tr>
+                <tr>
+                    <td><label>Vapor Pressure</label></td>
+                    <td><input type="text" class="container" id="vp" name="vp" placeholder="Enter Vapour Pressure" value="47"></td>
+                    <td><label>mmHg</label></td>
+                </tr>
+                <tr>
+                    <td></td>
+                    <td><button type="submit" class="submit-button" id= "submit" form="input_form">Evaluate</button></td>
+                    <td></td>
+                </tr>
+            </table>
+        </div>
+    </form>
+    <div id="output_div">
+        <ul id="output_list">
+
+        </ul>
+    </div>
+</div>
+</body>
+</html>
+
