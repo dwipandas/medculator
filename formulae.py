@@ -41,33 +41,41 @@ def analysemetacidosis(na, cl, hco3, albumin=4):
 
 
 def analyserespacidosis(hco3, pco2):
-    ratio = (abs(hco3 - 24) / (abs(pco2 - 40) / 10))
-    if abs(ratio - 1) < abs(ratio - 3.5):
+    ratio = abs(pco2 - 40) / 10
+    if abs(hco3 - 24 - ratio) < abs(hco3 - 24 - 3.5*ratio):
         return 4
     else:
         return 5
 
 
 def analyserespalkalosis(hco3, pco2):
-    ratio = (abs(hco3 - 24) / (abs(pco2 - 40) / 10))
-    if abs(ratio - 2) < abs(ratio - 5):
+    ratio = abs(pco2 - 40) / 10
+    if abs(hco3 - 24 - 2*ratio) < abs(hco3 - 24 - 5*ratio):
         return 6
     else:
         return 7
 
 
 def primary_disorder(ph, pco2, hco3, na, cl, albumin=4):
-    if ph < 7.4:
+    if ph < 7.35:
         if hco3 < 24:
             # ag = anion_gap(na, cl, hco3, albumin)
             return analysemetacidosis(na, cl, hco3, albumin)
         else:
             return analyserespacidosis(hco3, pco2)
-    elif ph > 7.4:
+    elif ph > 7.45:
         if hco3 > 24:
             return 3
         else:
             return analyserespalkalosis(hco3, pco2)
+    elif hco3 < 22:
+        return analysemetacidosis(na, cl, hco3, albumin)
+    elif hco3 > 26:
+        return 3
+    elif pco2 > 45:
+        return analyserespacidosis(hco3, pco2)
+    elif pco2 < 35:
+        return analyserespalkalosis(hco3, pco2)
     else:
         return None
 
@@ -134,7 +142,7 @@ def tertiarydisorder(hco3, primarydisorder, secondarydisorder, ag):
                 return 1
             else:
                 return 0
-        elif deltaratio > 1:
+        elif deltaratio >= 2:
             return 3
         else:
             return None
@@ -152,7 +160,14 @@ def oxygenation(fio2, po2, pco2, age, patm=760, vp=47):
     elif po2 < 40:
         hypoxia = " Severe Hypoxia"
     alvartgrad = None
-    aagrad = (patm - vp) - 1.25 * pco2 - po2
+    aagrad = (patm - vp)*fio2 - 1.25 * pco2 - po2
+    #print("po2:", po2)
+    #print("pco2:", pco2)
+    #print("fio2:", fio2)
+    #print("age:", age)
+    #print("patm:", patm)
+    #print("vp:", vp)
+    #print("aagrad:", aagrad)
     if aagrad > (age/4) + 4:
         alvartgrad = " With Raised A-a Gradient"
     else:
@@ -179,7 +194,7 @@ def analyseabg(ph, po2, pco2, hco3, na, cl, age, fio2=0.21, patm=760, vp=47, alb
     t = tertiarydisorder(hco3, p, s, ag)
     if t is not None:
         disorder.append(abnormalities[t])
-    ox = oxygenation(fio2, po2, pco2, age, patm, vp)
+    ox = oxygenation(fio2=fio2, po2=po2, pco2=pco2, age=age, patm=patm, vp=vp)
     if ox is not None:
         disorder.append(ox)
     #print(disorder)

@@ -20,7 +20,7 @@ def result():
         cl = float(request.form['cl'])
         alb = float(request.form['alb'])
         fio2 = float(request.form['fio2'])
-        result = formulae.analyseabg(ph, po2, pco2, hco3, na, cl, age, alb, fio2)
+        result = formulae.analyseabg(ph=ph, po2=po2, pco2=pco2, hco3=hco3, na=na, cl=cl, age=age, albumin=alb, fio2=fio2)
         print(result)
         #return render_template("result.html", list=result)
         return jsonify(result)
