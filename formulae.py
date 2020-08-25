@@ -8,7 +8,7 @@ abnormalities = ["High Anion Gap Metabolic Acidosis", "Normal Anion Gap Metaboli
 
 
 def validate_abg(ph, pco2, hco3):
-    if ph - (-log((24 * pco2) / (hco3 * 1000000000))) <= 0.1:  # 24*pco2/hco3 = [H+] in nmol & pH = -log[H+ in mol]
+    if 10 ** (9-ph) - 24 * pco2/hco3 <= 0.1:  # 24*pco2/hco3 = [H+] in nmol & pH = -log[H+ in mol]
         return True
     return False
 
@@ -179,9 +179,9 @@ def oxygenation(fio2, po2, pco2, age, patm=760, vp=47):
 
 def analyseabg(ph, po2, pco2, hco3, na, cl, age, fio2=0.21, patm=760, vp=47, albumin=4):
     if validate_abg(ph,pco2,hco3) == False:
-        return "ABG is Inavalid"
+        return(["ABG is Inavalid"])
     elif is_abg_normal(ph, pco2, hco3) == True:
-        return("ABG is Normal")
+        return(["ABG is Normal"])
     disorder = []
     p = primary_disorder(ph,pco2,hco3,na,cl,albumin)
     if p is not None:
