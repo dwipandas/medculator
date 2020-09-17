@@ -24,5 +24,15 @@ def result():
         print(result)
         #return render_template("result.html", list=result)
         return jsonify(result)
+@app.route('/fio2', methods=["GET", "POST"])
+def fio2():
+    if request.method == "POST":
+        o2flowrate = float(request.form['o2flow'])
+        deliverytype = float(request.form['device'])
+        colorcode = int(request.form['colorcode'])
+        result2 = formulae.getfio2(o2flowrate, deliverytype, colorcode)
+        print(result2)
+        return jsonify(result2)
+
 if __name__ == '__main__':
     app.run()

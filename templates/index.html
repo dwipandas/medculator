@@ -30,6 +30,72 @@
 
 
         </script>
+    <script type="text/javascript">
+        $("document").ready(function(){
+            $("#btnfio2").click(function(){
+                $("#fio2form").css('display', 'inline-block');
+                $("#popup").show();
+                $("#device").val("0");
+                $("#o2flow").children().remove();
+                $("#o2flow").parents('tr').show();
+                $("#colorcode").parents('tr').hide();
+                for (i=1; i<= 6; i++){
+                    $("#o2flow").append($('<option></option>').attr('value', i.toString()).text(i.toString()));
+                }
+            })
+        })
+
+    </script>
+
+    <script type="text/javascript">
+        $("document").ready(function(event){
+            $("#fio2form").submit(function(event){
+                event.preventDefault()
+                $.ajax({
+                    url : "/fio2",
+                    type : "POST",
+                    data : $("#fio2form").serialize(),
+                    success : function (data){
+                        $("#fio2").val(data);
+                        $("#popup").hide();
+                    }
+                })
+            })
+        })
+
+    </script>
+
+    <script type="text/javascript">
+        $("document").ready(function (){
+            $("#device").change(function (){
+                $("#o2flow").children().remove();
+                device = $(this).children("option:selected").val();
+                if (device == "0"){
+                    for (i=1; i<= 6; i++){
+                        $("#o2flow").parents('tr').show()
+                        $("#o2flow").append($('<option></option>').attr('value', i.toString()).text(i.toString()));
+                        $("#colorcode").parents('tr').hide()
+                    }
+                } else if (device == "1"){
+                    for (i=6; i<= 10; i++){
+                        $("#o2flow").parents('tr').show()
+                        $("#o2flow").append($('<option></option>').attr('value', i.toString()).text(i.toString()));
+                        $("#colorcode").parents('tr').hide()
+                    }
+                } else if (device == "2"){
+                    for (i=10; i<=15; i++){
+                        $("#o2flow").parents('tr').show()
+                        $("#o2flow").append($('<option></option>').attr('value', i.toString()).text(i.toString()));
+                        $("#colorcode").parents('tr').hide()
+                    }
+                }else {
+                    $("#colorcode").parents('tr').show()
+                    $("#o2flow").parents('tr').hide()
+                    $("#o2flow").append($('<option></option>').attr('value', "4").text("4"));
+                }
+            })
+        })
+    </script>
     <link href="https://fonts.googleapis.com/css2?family=Quicksand&display=swap" rel="stylesheet">
     <style>
         body {
@@ -46,11 +112,21 @@
         }
         tr:nth-child(even) {
             background-color: #e0fcfc;
+            width: 100%;
         }
         ul {
             list-style-type: none;
             background-color: linen;
             white-space: nowrap;
+        }
+        .fio2container{
+            width: fit-content;
+            display : none;
+            border: 3px solid #f1f1f1;
+            z-index: 9;
+        }
+        select{
+            width: 100%;
         }
     </style>
     </head>
@@ -60,9 +136,7 @@
         <div class="input">
             <table>
                 <tr>
-                    <th></th>
-                    <th>Analyse ABG</th>
-                    <th></th>
+                    <th colspan="3">Analysis Of ABG : <i>Boston Method</i></th>
                 </tr>
                 <tr>
                     <td><label>Age </label></td>
@@ -107,7 +181,7 @@
                 <tr>
                     <td><label>FIO<sub>2</sub></label></td>
                     <td><input type="text" class="container" id="fio2" name="fio2" placeholder="Enter FIO2 value" value="0.21"></td>
-                    <td></td>
+                    <td><button name="btnfio2" id="btnfio2" >Find</button></td>
                 </tr>
                 <tr>
                     <td><label>P<sub>atm</sub></label></td>
@@ -132,6 +206,42 @@
 
         </ul>
     </div>
+</div>
+<div id="popup" class="fio2container">
+    <form id="fio2form" method="POST" action="/fio2">
+        <table>
+            <tr>
+            <td><label for="device">Select O<sub>2</sub> Delivery Type: </label></td>
+            <td><select name="device" id="device" >
+                <option value="0">Nasal Prong</option>
+                <option value="1">Face Mask</option>
+                <option value="2">NRBM</option>
+                <option value="3">Venturi Mask</option>
+            </select></td>
+            </tr>
+            <tr>
+            <td><label for="o2flow">O<sub>2</sub> Flow (L/min): </label></td>
+            <td><select name="o2flow" id="o2flow" >
+
+            </select></td>
+            </tr>
+            <tr>
+            <td><label for="colorcode" id="lblcolorcode">Color Code</label></td>
+            <td><select name="colorcode" id="colorcode" >
+                <option value="0">"Blue</option>
+                <option value="1">White</option>
+                <option value="2">Orange</option>
+                <option value="3">Yellow</option>
+                <option value="4">Red</option>
+                <option value="5">Green</option>
+            </select></td>
+            </tr>
+            <tr>
+                <td align="center" colspan="2"><button type="submit" id="fio2btn" form="fio2form" >Submit</button></td>
+            </tr>
+        </table>
+    </form>
+
 </div>
 </body>
 </html>

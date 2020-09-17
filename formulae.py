@@ -5,7 +5,8 @@ abnormalities = ["High Anion Gap Metabolic Acidosis", "Normal Anion Gap Metaboli
                  "Metabolic Alkalosis", "Acute Respiratory Acidosis", "Chronic Respiratory Acidosis",
                  "Acute respiratory Alkalosis", "Chronic Respiratory Alkalosis"]
 
-
+deliverytypes =["Nasal Canula", "Face Mask", "NRBM", "Venturi Mask"]
+venturicolorcodes =["Blue", "White", "Orange", "Yellow", "Red", "Green"]
 
 def validate_abg(ph, pco2, hco3):
     if 10 ** (9-ph) - 24 * pco2/hco3 <= 0.1:  # 24*pco2/hco3 = [H+] in nmol & pH = -log[H+ in mol]
@@ -153,11 +154,12 @@ def osmolargap(osm, na, bun, glucose):
 
 def oxygenation(fio2, po2, pco2, age, patm=760, vp=47):
     hypoxia = None
-    if 60 < po2 < 80:
+    pf = po2/fio2
+    if 200 < pf <= 300:
         hypoxia = " Mild Hypoxia"
-    elif 40 < po2 < 60:
+    elif 100 < pf <= 200:
         hypoxia = " Moderate Hypoxia"
-    elif po2 < 40:
+    elif pf <= 100:
         hypoxia = " Severe Hypoxia"
     alvartgrad = None
     aagrad = (patm - vp)*fio2 - 1.25 * pco2 - po2
@@ -199,3 +201,24 @@ def analyseabg(ph, po2, pco2, hco3, na, cl, age, fio2=0.21, patm=760, vp=47, alb
         disorder.append(ox)
     #print(disorder)
     return disorder
+
+def getfio2(o2flowrate, deliverytype, venturicolorcode=None):
+    if deliverytype == 0:
+        return (4 * o2flowrate + 20) / 100
+    elif deliverytype == 1:
+        return (6 * o2flowrate - 1) / 100
+    elif deliverytype == 2:
+        return 1.0
+    elif deliverytype == 3:
+        if venturicolorcodes[venturicolorcode] == "Blue":
+            return 0.24
+        elif venturicolorcodes[venturicolorcode] == "White":
+            return 0.28
+        elif venturicolorcodes[venturicolorcode] == "Orange":
+            return 0.31
+        elif venturicolorcodes[venturicolorcode] == "Yellow":
+            return 0.35
+        elif venturicolorcodes[venturicolorcode] == "Red":
+            return 0.4
+        else:
+            return 0.6
