@@ -119,11 +119,11 @@
             justify-content: center;
             text-align: center;
         }
-        table  {
+        .main_table  {
             align-self: center;
             margin: 0 auto;
         }
-        tr:nth-child(even) {
+        .main_table tr:nth-child(even) {
             background-color: #e0fcfc;
             width: 100%;
         }
@@ -138,8 +138,9 @@
             border: 3px solid #f1f1f1;
             z-index: 9;
             position: fixed;
+            top: 50%;
             left: 50%;
-            transform: translate(-50%, -0%);
+            transform: translate(-50%, -50%);
         }
         select{
             width: 100%;
@@ -166,13 +167,16 @@
             0% {transform: rotate(0deg);}
             100% {transform: rotate(360deg);}
         }
+        #popup{
+            background-color: mintcream;
+        }
     </style>
     </head>
 <body>
 <div class="container">
     <form id="input_form"  method="POST" action="/result">
         <div class="input">
-            <table>
+            <table class="main_table">
                 <tr>
                     <th colspan="3">Analysis Of ABG : <i>Boston Method</i></th>
                 </tr>
