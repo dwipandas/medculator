@@ -180,10 +180,14 @@ def oxygenation(fio2, po2, pco2, age, patm=760, vp=47):
         return None
 
 def analyseabg(ph, po2, pco2, hco3, na, cl, age, fio2=0.21, patm=760, vp=47, albumin=4):
+    ox = oxygenation(fio2=fio2, po2=po2, pco2=pco2, age=age, patm=patm, vp=vp)
     if validate_abg(ph,pco2,hco3) == False:
         return(["ABG is Inavalid"])
-    elif is_abg_normal(ph, pco2, hco3) == True:
-        return(["ABG is Normal"])
+    elif is_abg_normal(ph, pco2, hco3) == True :
+        if ox is None:
+            return(["ABG is Normal"])
+        else:
+            return([ox])
     disorder = []
     p = primary_disorder(ph,pco2,hco3,na,cl,albumin)
     if p is not None:
@@ -196,7 +200,7 @@ def analyseabg(ph, po2, pco2, hco3, na, cl, age, fio2=0.21, patm=760, vp=47, alb
     t = tertiarydisorder(hco3, p, s, ag)
     if t is not None:
         disorder.append(abnormalities[t])
-    ox = oxygenation(fio2=fio2, po2=po2, pco2=pco2, age=age, patm=patm, vp=vp)
+
     if ox is not None:
         disorder.append(ox)
     #print(disorder)
