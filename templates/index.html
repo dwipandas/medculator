@@ -54,6 +54,7 @@
         $("document").ready(function(event){
             $("#fio2form").submit(function(event){
                 event.preventDefault();
+                $("#popup").hide();
                 $("spinner").show();
                 $.ajax({
                     url : "/fio2",
@@ -62,7 +63,6 @@
                     success : function (data){
                         $("#spinner").hide();
                         $("#fio2").val(data);
-                        $("#popup").hide();
                     }
                 })
             })
