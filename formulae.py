@@ -84,7 +84,7 @@ def primary_disorder(ph, pco2, hco3, na, cl, albumin=4):
 def secondarydisorder(na, cl, ph, pco2, hco3, albumin, primarydisorder=0):
     # returns the disorder & chronivity if it is applicable
     if primarydisorder in [0, 1, 2]:
-        ratio = (abs(hco3 - 24) / (abs(pco2 - 40) / 10))
+        #ratio = (abs(hco3 - 24) / (abs(pco2 - 40) / 10))
         if pco2 < 1.5 * hco3 + 6:
             return analyserespalkalosis(hco3, pco2)
         elif pco2 > 1.5 * hco3 + 10:
@@ -108,7 +108,8 @@ def secondarydisorder(na, cl, ph, pco2, hco3, albumin, primarydisorder=0):
         else:
             return None
     elif primarydisorder == 5:
-        ratio = (abs(hco3 - 24) / (abs(pco2 - 40) / 10))
+        #ratio = (abs(hco3 - 24) / (abs(pco2 - 40) / 10))
+        ratio = abs(pco2 - 40) / 10
         if hco3 < 24 + 3.5 * ratio:
             return analysemetacidosis(na, cl, hco3, albumin)
         elif hco3 > 24 + 3.5 * ratio:
@@ -117,17 +118,18 @@ def secondarydisorder(na, cl, ph, pco2, hco3, albumin, primarydisorder=0):
             return None
     elif primarydisorder == 6:
         ratio = abs(pco2 - 40) / 10
-        if hco3 < 24 + 2 * ratio:
+        if hco3 < 24 - 2 * ratio:
             return analysemetacidosis(na, cl, hco3, albumin)
-        elif hco3 > 24 + 2 * ratio:
+        elif hco3 > 24 - 2 * ratio:
             return 3
         else:
             return None
     elif primarydisorder == 7:
-        ratio = (abs(hco3 - 24) / (abs(pco2 - 40) / 10))
-        if hco3 < 24 + 5 * ratio:
+        #ratio = (abs(hco3 - 24) / (abs(pco2 - 40) / 10))
+        ratio = abs(pco2 - 40) / 10
+        if hco3 < 24 - 5 * ratio:
             return analysemetacidosis(na, cl, hco3, albumin)
-        elif hco3 > 24 + 5 * ratio:
+        elif hco3 > 24 - 5 * ratio:
             return 3
         else:
             return None
@@ -137,7 +139,11 @@ def secondarydisorder(na, cl, ph, pco2, hco3, albumin, primarydisorder=0):
 
 def tertiarydisorder(hco3, primarydisorder, secondarydisorder, ag):
     if primarydisorder in [0, 1, 2] or secondarydisorder in [0, 1, 2]:
-        deltaratio = (ag - 12) / (24 - hco3)
+        if hco3 == 24:
+            deltaratio = ag - 12
+        else:
+            deltaratio = (ag - 12) / (24 - hco3)
+            #print("deltaratio: ", deltaratio)
         if 0.4 <= deltaratio < 1:
             if ag > 10:
                 return 1
