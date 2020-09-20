@@ -8,10 +8,21 @@ abnormalities = ["High Anion Gap Metabolic Acidosis", "Normal Anion Gap Metaboli
 deliverytypes =["Nasal Canula", "Face Mask", "NRBM", "Venturi Mask"]
 venturicolorcodes =["Blue", "White", "Orange", "Yellow", "Red", "Green"]
 
+def calculatedph(pco2, hco3):
+    h = 24 * pco2 / hco3
+    #ph = 7.4 + (40 - h) * 0.01
+    ph = -log(h / 1000000000, 10)
+    print("caclucalted ph:", ph)
+    return ph
+
 def validate_abg(ph, pco2, hco3):
-    if 10 ** (9-ph) - 24 * pco2/hco3 <= 0.1:  # 24*pco2/hco3 = [H+] in nmol & pH = -log[H+ in mol]
+        # if 10 ** (9-ph) - 24 * pco2/hco3 <= 0.1:  # 24*pco2/hco3 = [H+] in nmol & pH = -log[H+ in mol]
+        #   return True
+        # return False
+    if abs(ph - calculatedph(pco2, hco3)) <= 0.3:
         return True
-    return False
+    else:
+        return False
 
 
 def is_abg_normal(ph, pco2, hco3):
@@ -56,18 +67,17 @@ def analyserespalkalosis(hco3, pco2):
     else:
         return 7
 
-
 def primary_disorder(ph, pco2, hco3, na, cl, albumin=4):
     #if any of the pCO2, hco3 or pH is abnormal, first we look at the pH --> whether acidic or alkaline.
     #if pH == 7.4 then either pCO2 or HCO3 must be abnormal i.e. beyond the normal range
     if ph < 7.4:
-        if hco3 < 24:
+        if (24 - hco3)/24 >= (pco2 - 40)/40:
             # ag = anion_gap(na, cl, hco3, albumin)
             return analysemetacidosis(na, cl, hco3, albumin)
         else:
             return analyserespacidosis(hco3, pco2)
     elif ph > 7.4:
-        if hco3 > 24:
+        if (hco3 - 24)/24 > (40 - pco2)/40:
             return 3
         else:
             return analyserespalkalosis(hco3, pco2)
@@ -111,26 +121,26 @@ def secondarydisorder(na, cl, ph, pco2, hco3, albumin, primarydisorder=0):
             return analyserespacidosis(hco3, pco2)
         else:
             return None
-    elif primarydisorder == 4:
+    elif primarydisorder == 4: # Ac Resp. Acidosis. del(hco3) 1 - 1.5 per increase in ratio ***interpolation***
         ratio = abs(pco2 - 40) / 10
         if hco3 < 24 + ratio:
             return analysemetacidosis(na, cl, hco3, albumin)
-        elif hco3 > 24 + ratio:
+        elif hco3 > 24 + 1.5 * ratio:
             return 3
         else:
             return None
-    elif primarydisorder == 5:
+    elif primarydisorder == 5: # Chr. Resp. Acidosis --> 3 - 3.5
         #ratio = (abs(hco3 - 24) / (abs(pco2 - 40) / 10))
         ratio = abs(pco2 - 40) / 10
-        if hco3 < 24 + 3.5 * ratio:
+        if hco3 < 24 + 3.0 * ratio:
             return analysemetacidosis(na, cl, hco3, albumin)
         elif hco3 > 24 + 3.5 * ratio:
             return 3
         else:
             return None
-    elif primarydisorder == 6:
+    elif primarydisorder == 6: # Ac Resp alkalosis. 2 - 2.5
         ratio = abs(pco2 - 40) / 10
-        if hco3 < 24 - 2 * ratio:
+        if hco3 < 24 - 2.5 * ratio:
             return analysemetacidosis(na, cl, hco3, albumin)
         elif hco3 > 24 - 2 * ratio:
             return 3
@@ -141,7 +151,7 @@ def secondarydisorder(na, cl, ph, pco2, hco3, albumin, primarydisorder=0):
         ratio = abs(pco2 - 40) / 10
         if hco3 < 24 - 5 * ratio:
             return analysemetacidosis(na, cl, hco3, albumin)
-        elif hco3 > 24 - 5 * ratio:
+        elif hco3 > 24 - 4 * ratio:
             return 3
         else:
             return None
