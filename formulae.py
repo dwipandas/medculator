@@ -21,7 +21,7 @@ def is_abg_normal(ph, pco2, hco3):
     # Partial pressure of carbon dioxide (PaCO2): 35-45 mmHg
     # Bicarbonate (HCO3): 22-26 mEq/L
     # Oxygen saturation (O2 Sat): 94-100%
-    if ph >= 7.35 and ph <= 7.45 and pco2 >= 35 and pco2 <= 45 and hco3 >= 22 and hco3 <= 26:
+    if 7.35 <= ph <= 7.45 and 25 <= pco2 <= 45 and 22 <= hco3 <= 26:
         return True
     return False
 
@@ -150,17 +150,14 @@ def secondarydisorder(na, cl, ph, pco2, hco3, albumin, primarydisorder=0):
 
 
 def tertiarydisorder(hco3, primarydisorder, secondarydisorder, ag):
-    if primarydisorder in [0, 1, 2] or secondarydisorder in [0, 1, 2]:
+    if primarydisorder == 0 or secondarydisorder == 0:
         if hco3 == 24:
             deltaratio = 10 * (ag - 12) #assumption to look later for the effects. to avoid divide by zero lets make 14 - hco3 = 0.1
         else:
             deltaratio = (ag - 12) / (24 - hco3)
-        print("deltaratio: ", deltaratio)
-        if 0.4 <= deltaratio < 1:
-            if ag > 12:
-                return 1
-            else:
-                return 0
+        #print("deltaratio: ", deltaratio)
+        if deltaratio < 0.8:
+            return 1
         elif deltaratio >= 2:
             return 3
         else:
