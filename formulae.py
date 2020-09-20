@@ -51,7 +51,7 @@ def analyserespacidosis(hco3, pco2):
 
 def analyserespalkalosis(hco3, pco2):
     ratio = abs(pco2 - 40) / 10
-    if abs(hco3 - 24 - 2*ratio) < abs(hco3 - 24 - 5*ratio):
+    if abs(hco3 - 24 + 2*ratio) < abs(hco3 - 24 + 5*ratio):
         return 6
     else:
         return 7
@@ -140,12 +140,12 @@ def secondarydisorder(na, cl, ph, pco2, hco3, albumin, primarydisorder=0):
 def tertiarydisorder(hco3, primarydisorder, secondarydisorder, ag):
     if primarydisorder in [0, 1, 2] or secondarydisorder in [0, 1, 2]:
         if hco3 == 24:
-            deltaratio = ag - 12
+            deltaratio = ag - 12 #assumption to look later for the effects
         else:
             deltaratio = (ag - 12) / (24 - hco3)
-            #print("deltaratio: ", deltaratio)
+            print("deltaratio: ", deltaratio)
         if 0.4 <= deltaratio < 1:
-            if ag > 10:
+            if ag > 12:
                 return 1
             else:
                 return 0
