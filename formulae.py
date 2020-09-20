@@ -58,25 +58,26 @@ def analyserespalkalosis(hco3, pco2):
 
 
 def primary_disorder(ph, pco2, hco3, na, cl, albumin=4):
-    if ph < 7.35:
+    if ph < 7.4:
         if hco3 < 24:
             # ag = anion_gap(na, cl, hco3, albumin)
             return analysemetacidosis(na, cl, hco3, albumin)
         else:
             return analyserespacidosis(hco3, pco2)
-    elif ph > 7.45:
+    elif ph > 7.4:
         if hco3 > 24:
             return 3
         else:
             return analyserespalkalosis(hco3, pco2)
-    elif hco3 < 22:
-        return analysemetacidosis(na, cl, hco3, albumin)
-    elif hco3 > 26:
-        return 3
-    elif pco2 > 45:
-        return analyserespacidosis(hco3, pco2)
-    elif pco2 < 35:
-        return analyserespalkalosis(hco3, pco2)
+    elif ph == 7.4:
+        if hco3 < 22:
+            return analysemetacidosis(na, cl, hco3, albumin)
+        elif hco3 >= 26:
+            return 3
+        elif pco2 > 45:
+            return analyserespacidosis(hco3, pco2)
+        elif pco2 < 35:
+            return analyserespalkalosis(hco3, pco2)
     else:
         return None
 
@@ -140,10 +141,10 @@ def secondarydisorder(na, cl, ph, pco2, hco3, albumin, primarydisorder=0):
 def tertiarydisorder(hco3, primarydisorder, secondarydisorder, ag):
     if primarydisorder in [0, 1, 2] or secondarydisorder in [0, 1, 2]:
         if hco3 == 24:
-            deltaratio = ag - 12 #assumption to look later for the effects
+            deltaratio = 10 * (ag - 12) #assumption to look later for the effects. to avoid divide by zero lets make 14 - hco3 = 0.1
         else:
             deltaratio = (ag - 12) / (24 - hco3)
-            print("deltaratio: ", deltaratio)
+        print("deltaratio: ", deltaratio)
         if 0.4 <= deltaratio < 1:
             if ag > 12:
                 return 1
