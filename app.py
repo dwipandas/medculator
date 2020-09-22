@@ -23,6 +23,16 @@ def result():
         result = formulae.analyseabg(ph=ph, po2=po2, pco2=pco2, hco3=hco3, na=na, cl=cl, age=age, albumin=alb, fio2=fio2)
         print(result)
         #return render_template("result.html", list=result)
+        try:
+            counter =  open("count.txt", "r")
+            data = counter.readline()
+            intdata = int(data)
+            intdata += 1
+            data = str(intdata)
+            counter = open("count.txt", "w")
+            counter.writelines(data)
+        except:
+            print("counter read/write exception")
         return jsonify(result)
 @app.route('/fio2', methods=["GET", "POST"])
 def fio2():
@@ -34,5 +44,14 @@ def fio2():
         print(result2)
         return jsonify(result2)
 
+@app.route('/visitor_count_3.1416', methods=["GET"])
+def getvisitors():
+    try:
+        counter =  open("count.txt", "r+")
+        data = counter.readline()
+        intdata = int(data)
+        return "<p>Number of visitors so far: " + str(intdata) + "</p>"
+    except:
+        return("counter read/write exception")
 if __name__ == '__main__':
     app.run()
