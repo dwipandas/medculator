@@ -43,10 +43,10 @@ def anion_gap(na, cl, hco3, albumin=4):
 
 
 def analysemetacidosis(na, cl, hco3, albumin=4):
-    ag = anion_gap(na, cl, hco3, albumin)
-    if 10 <= ag <= 12:
+    ag = anion_gap(na, cl, hco3, albumin) #ag normal is taken as 12 +/- 4 (Medscape)
+    if 8 <= ag <= 16:
         return 1
-    elif ag > 12:
+    elif ag > 16:
         return 0
     else:
         return 2
