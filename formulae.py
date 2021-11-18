@@ -163,9 +163,10 @@ def tertiarydisorder(hco3, primarydisorder, secondarydisorder, ag):
     if primarydisorder == 0 or secondarydisorder == 0:
         if hco3 == 24:
             deltaratio = 10 * (ag - 12) #assumption to look later for the effects. to avoid divide by zero lets make 14 - hco3 = 0.1
+            print("deltaratio: ", deltaratio)
         else:
             deltaratio = (ag - 12) / (24 - hco3)
-        #print("deltaratio: ", deltaratio)
+        print("deltaratio: ", deltaratio)
         if deltaratio < 0.8:
             return 1
         elif deltaratio >= 2:
@@ -224,7 +225,7 @@ def analyseabg(ph, po2, pco2, hco3, na, cl, age, fio2=0.21, patm=760, vp=47, alb
     ag = anion_gap(na, cl, hco3, albumin)
     t = tertiarydisorder(hco3, p, s, ag)
     if t is not None:
-        disorder.append('<p style="color:blue><strong>Tertiary Disorder:</strong></p>' + abnormalities[t])
+        disorder.append('<p style="color:blue"><strong>Tertiary Disorder:</strong></p>' + abnormalities[t])
 
     if ox is not None:
         disorder.append('<p style= "color:blue"><strong>Oxygenation:</strong></p>' + ox)
