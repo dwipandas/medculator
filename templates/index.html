@@ -12,20 +12,39 @@
                 event.preventDefault();
                 $("#output_list").empty();
                 $("#spinner").show();
+                var result1, result2;
+                $.when(
                     $.ajax({
                         url: "/result",
                         type : "POST",
                         //contentType : "application/JSON",
                         data : $("#input_form").serialize(),
                         success : function (data){
-                            console.log("success");
-                            $("#spinner").hide();
-                            $.each(data, function (index, value){
-                                $("#output_list").append("<li>" + value + "</li>");
-                            })
-                            $("#disclaimer").show();
+                            result1 = data;
+                            // console.log("success");
+                            // $("#spinner").hide();
+                            // $.each(data, function (index, value){
+                            //     $("#output_list").append("<li>" + value + "</li>");
+                            // })
+                            // $("#disclaimer").show();
                         }
-            });
+                    }),
+                    $.ajax({
+                        url: "/visitor_count_3.1416",
+                        type: "GET",
+                        success: function (data){
+                            result2 = data;
+                        }
+                    })
+                ).then(function (){
+                    $("#spinner").hide();
+                    $.each(result1, function (index, value){
+                        $("#output_list").append("<li>" + value + "</li>");
+                    })
+                    $("#disclaimer").show();
+                    $("#visitor").text(result2);
+                });
+
                 });
             });
 
@@ -110,6 +129,7 @@
             })
         })
     </script>
+
 
     <script data-ad-client="ca-pub-9325217621095711" async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js"></script>
 
@@ -277,6 +297,7 @@
         </div>
     </div>
 </div>
+
 <div id="popup" class="fio2container">
     <form id="fio2form" method="POST" action="/fio2">
         <table>
@@ -312,7 +333,12 @@
         </table>
     </form>
 </div>
+<div id="visitor">
 
+</div>
+<div>
+    <br>
+</div>
 <!-- AddToAny BEGIN -->
 <!-- AddToAny BEGIN -->
 <div>
