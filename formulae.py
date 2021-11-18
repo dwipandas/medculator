@@ -216,18 +216,18 @@ def analyseabg(ph, po2, pco2, hco3, na, cl, age, fio2=0.21, patm=760, vp=47, alb
     disorder = []
     p = primary_disorder(ph,pco2,hco3,na,cl,albumin)
     if p is not None:
-        disorder.append(abnormalities[p])
+        disorder.append('<p style= "color:blue"><strong>Primary Disorder:</strong></p>' + abnormalities[p])
 
     s = secondarydisorder(na, cl, ph, pco2, hco3, albumin, p)
     if s is not None:
-        disorder.append(abnormalities[s])
+        disorder.append('<p style= "color:blue"><strong>Secondary Disorder:</strong></p>' + abnormalities[s])
     ag = anion_gap(na, cl, hco3, albumin)
     t = tertiarydisorder(hco3, p, s, ag)
     if t is not None:
-        disorder.append(abnormalities[t])
+        disorder.append('<p style="color:blue><strong>Tertiary Disorder:</strong></p>' + abnormalities[t])
 
     if ox is not None:
-        disorder.append(ox)
+        disorder.append('<p style= "color:blue"><strong>Oxygenation:</strong></p>' + ox)
     #print(disorder)
     return disorder
 
