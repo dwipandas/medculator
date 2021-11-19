@@ -42,7 +42,7 @@
                         $("#output_list").append("<li>" + value + "</li>");
                     })
                     $("#disclaimer").show();
-                    $("#visitor").text(result2);
+                    $("#visitor").text(result2); //the #visitor element is removed because the textfile used to store number of visitors gets deleted when app offloaded by Heroku
                 });
 
                 });
@@ -333,9 +333,7 @@
         </table>
     </form>
 </div>
-<div id="visitor">
 
-</div>
 <div>
     <br>
 </div>
