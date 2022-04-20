@@ -28,14 +28,15 @@
                             // })
                             // $("#disclaimer").show();
                         }
-                    }),
-                    $.ajax({
-                        url: "/visitor_count_3.1416",
-                        type: "GET",
-                        success: function (data){
-                            result2 = data;
-                        }
                     })
+                    // ,
+                    // $.ajax({
+                    //     url: "/visitor_count_3.1416",
+                    //     type: "GET",
+                    //     success: function (data){
+                    //         result2 = data;
+                    //     }
+                    // })
                 ).then(function (){
                     $("#spinner").hide();
                     $.each(result1, function (index, value){
