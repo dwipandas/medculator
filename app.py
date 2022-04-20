@@ -34,21 +34,6 @@ def fio2():
         print(result2)
         return jsonify(result2)
 
-@app.route('/visitor_count_3.1416', methods=["GET"])
-def getvisitors():
-    try:
-        counter =  open("count.txt", "r")
-        data = counter.read()
-        intdata = int(data)
-        intdata +=1
-        counter.close()
-        counter = open("count.txt", "w")
-        counter.truncate(0)
-        counter.write(str(intdata))
-        counter.close()
-        print("called")
-        return "App used so far: " + str(intdata) + " times"
-    except:
-        return("counter read/write exception")
+
 if __name__ == '__main__':
     app.run()
